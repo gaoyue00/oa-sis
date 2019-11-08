@@ -1,0 +1,30 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: cjs-redisson-example
+  redis:
+    host: 60.205.106.190
+    port: 6379
+    password: oasisadmin
+    pool:
+      #连接池最大的活跃连接数，-1表示无限
+      max-active: 8
+      #连接池最大的空闲连接数，-1表示无限
+      max-idle: 8
+      #当连接池耗尽时，新获取连接需要等待的最大时间，以毫秒单位，-1表示无限等待
+      max-wait: 30
+      #连接池中空闲连接的最小数量
+      min-idle: 3
+    #连接超时时间，毫秒单位
+    timeout: 2000
+    cache:
+      type: redis
+
+  datasource:
+    url: jdbc:mysql://60.205.106.190:3306/test_gy
+    username: root
+    password: oasisadmin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+
