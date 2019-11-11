@@ -1,5 +1,7 @@
 package com.cjs.example.lock.service.impl;
 
+
+import com.cjs.example.lock.mapper.OrderMapper;
 import com.cjs.example.lock.model.OrderModel;
 import com.cjs.example.lock.repository.OrderRepository;
 import com.cjs.example.lock.service.OrderService;
@@ -8,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -29,6 +30,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private OrderMapper orderMapper;
 
     /**
      * 乐观锁
@@ -53,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
             }
         } catch (Exception ex) {
             log.error("下单失败", ex);
+            return  "下单失败";
         } finally {
            if (lock.isHeldByCurrentThread()){
                lock.unlock();
@@ -85,8 +90,9 @@ public class OrderServiceImpl implements OrderService {
         Date now = new Date();
         orderModel.setCreateTime(now);
         orderModel.setUpdateTime(now);
-        orderRepository.save(orderModel);
-
+//        orderRepository.save(orderModel);
+//        orderMapper.createOrder(orderModel);
+        orderMapper.insert(orderModel);
         return orderNo;
     }
 
