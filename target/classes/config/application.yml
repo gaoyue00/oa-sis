@@ -1,0 +1,93 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: cjs-redisson-example
+  redis:
+    host: 60.205.106.190
+    port: 6379
+    password: oasisadmin
+    pool:
+      #连接池最大的活跃连接数，-1表示无限
+      max-active: 8
+      #连接池最大的空闲连接数，-1表示无限
+      max-idle: 8
+      #当连接池耗尽时，新获取连接需要等待的最大时间，以毫秒单位，-1表示无限等待
+      max-wait: 30
+      #连接池中空闲连接的最小数量
+      min-idle: 3
+    #连接超时时间，毫秒单位
+    timeout: 2000
+    cache:
+      type: redis
+
+
+
+  datasource:
+    #使用druid连接池
+    type: com.alibaba.druid.pool.DruidDataSource
+
+# 自定义的主数据源配置信息
+primary:
+  datasource:
+    #druid相关配置
+    druid:
+      #监控统计拦截的filters
+      filters: stat
+      driverClassName: com.mysql.jdbc.Driver
+      #配置基本属性
+      url: jdbc:mysql://60.205.106.190:3306/test_gy?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false
+      username: root
+      password: oasisadmin
+      #配置初始化大小/最小/最大
+      initialSize: 1
+      minIdle: 1
+      maxActive: 20
+      #获取连接等待超时时间
+      maxWait: 60000
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      timeBetweenEvictionRunsMillis: 60000
+      #一个连接在池中最小生存的时间
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+      poolPreparedStatements: false
+      maxPoolPreparedStatementPerConnectionSize: 20
+      useGlobalDataSourceStat: true # 合并多个DruidDataSource的监控数据
+      druidLoginName: wjf # 登录druid的账号
+      druidPassword: wjf # 登录druid的密码
+      cachePrepStmts: true  # 开启二级缓存
+
+# 自定义的从数据源配置信息
+back:
+  datasource:
+    #druid相关配置
+    druid:
+      #监控统计拦截的filters
+      filters: stat
+      driverClassName: com.mysql.jdbc.Driver
+      #配置基本属性
+      url: jdbc:mysql://60.205.106.190:3306/test?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false
+      username: root
+      password: oasisadmin
+      #配置初始化大小/最小/最大
+      initialSize: 1
+      minIdle: 1
+      maxActive: 20
+      #获取连接等待超时时间
+      maxWait: 60000
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      timeBetweenEvictionRunsMillis: 60000
+      #一个连接在池中最小生存的时间
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+      poolPreparedStatements: false
+      maxPoolPreparedStatementPerConnectionSize: 20
+
