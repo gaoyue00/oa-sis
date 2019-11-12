@@ -91,3 +91,5 @@ back:
       poolPreparedStatements: false
       maxPoolPreparedStatementPerConnectionSize: 20
 
+mybatis-plus:
+  type-aliases-package: com.cjs.example.lock.mapper

@@ -1,13 +1,11 @@
 package com.cjs.example.lock.service.impl;
 
-
 import com.cjs.example.lock.dao.primary.OrderMapper;
 import com.cjs.example.lock.entity.TOrder;
-
 import com.cjs.example.lock.mapper.TOrderMapper;
-import com.cjs.example.lock.model.OrderModel;
 import com.cjs.example.lock.repository.OrderRepository;
-import com.cjs.example.lock.service.OrderService;
+import com.cjs.example.lock.service.ITOrderService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cjs.example.lock.service.StockService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -15,27 +13,27 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author ChengJianSheng
- * @date 2019-07-30
+ * <p>
+ *  服务实现类
+ * </p>
+ *
+ * @author gy
+ * @since 2019-11-12
  */
 @Slf4j
 @Service
-public class OrderServiceImpl implements OrderService {
+public class TOrderServiceImpl extends ServiceImpl<TOrderMapper, TOrder> implements ITOrderService {
+
 
     @Autowired
     private StockService stockService;
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private RedissonClient redissonClient;
 
     @Autowired
-    private OrderMapper orderMapper;
+    private RedissonClient redissonClient;
 
     @Autowired
     private TOrderMapper tOrderMapper;
@@ -53,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
         //  如果不加锁，必然超卖
         RLock lock = redissonClient.getLock("stock:" + productId);
         try {
-            Boolean isLock = lock.tryLock(1,180,TimeUnit.SECONDS);
+            Boolean isLock = lock.tryLock(1,180, TimeUnit.SECONDS);
             if(!isLock){
                 return "有其他人在操作";
             }
@@ -65,11 +63,11 @@ public class OrderServiceImpl implements OrderService {
             log.error("下单失败", ex);
             return  "下单失败";
         } finally {
-           if (lock.isHeldByCurrentThread()){
-               lock.unlock();
-           }else {
-               return "操作超时返回";
-           }
+            if (lock.isHeldByCurrentThread()){
+                lock.unlock();
+            }else {
+                return "操作超时返回";
+            }
 
         }
 
@@ -101,7 +99,5 @@ public class OrderServiceImpl implements OrderService {
         tOrderMapper.insert(orderModel);
         return orderNo;
     }
-
-
 
 }

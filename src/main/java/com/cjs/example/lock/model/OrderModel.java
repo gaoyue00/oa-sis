@@ -1,5 +1,8 @@
 package com.cjs.example.lock.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,11 +15,11 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "t_order")
+@TableName(value = "t_order")
 public class OrderModel implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(value = "id",type = IdType.AUTO)//指定自增策略
     private Integer id;
 
     @Column(name = "order_no")

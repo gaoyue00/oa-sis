@@ -4,6 +4,7 @@ package com.cjs.example.lock.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import lombok.Data;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -45,9 +46,9 @@ public class PrimaryDataBaseConfig {
     private static final String MAPPER_LOCATION = "classpath*:/mappers/primary/*.xml";
 
     private String filters;
-    public static String url;
-    public static String username;
-    public static String password;
+    public  String url;
+    public  String username;
+    public  String password;
     private String driverClassName;
     private int initialSize;
     private int minIdle;
@@ -117,7 +118,7 @@ public class PrimaryDataBaseConfig {
     @Primary
     @Bean(name = "primarySqlSessionFactory")
     public SqlSessionFactory primarySqlSessionFactory(@Qualifier("primaryDataSource") DataSource primaryDataSource) throws Exception {
-        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        final MybatisSqlSessionFactoryBean sessionFactory = new MybatisSqlSessionFactoryBean ();
         sessionFactory.setDataSource(primaryDataSource);  // 设置数据源bean
         sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources(PrimaryDataBaseConfig.MAPPER_LOCATION));  // 设置mapper文件路径
