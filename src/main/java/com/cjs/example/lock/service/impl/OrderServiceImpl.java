@@ -15,7 +15,10 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private TOrderMapper tOrderMapper;
+
+
 
     /**
      * 乐观锁
@@ -76,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
         return Thread.currentThread().getName()+"操作成功！！！";
     }
 
+
     @Override
     public Boolean add(Integer productId,Integer productCount) {
         return stockService.addProductCount(productId,productCount);
@@ -84,6 +90,26 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Integer getCount(Integer productId) {
         return stockService.getCount(productId);
+    }
+
+    @Override
+    public List<OrderModel> getOrder() {
+        LocalDateTime nowTime = LocalDateTime.now();
+        List<OrderModel> orderModel = null;
+
+         orderModel = orderMapper.getOrder1(nowTime);
+
+        orderModel.addAll(orderMapper.getOrder(nowTime));
+        System.out.println(orderModel);
+        return orderModel;
+    }
+
+    @Override
+    public String save1(Integer id) {
+            if(this.save(id) == 0){
+                return "抢购无效";
+            }
+        return "抢购成功";
     }
 
 
@@ -100,6 +126,18 @@ public class OrderServiceImpl implements OrderService {
 //        orderMapper.insert(orderModel);
         tOrderMapper.insert(orderModel);
         return orderNo;
+    }
+
+    private int save(Integer id){
+        TOrder tOrder = tOrderMapper.selectById(id);
+        if(tOrder == null || tOrder.getStatus() == 1){
+            return 0;
+        }else {
+            tOrder.setStatus(1);
+            tOrderMapper.updateById(tOrder);
+            log.info("抢购成功,状态已更改"+Thread.currentThread().getName());
+            return  1;
+        }
     }
 
 

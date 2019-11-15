@@ -1,9 +1,13 @@
 package com.cjs.example.lock.controller;
 
 import com.cjs.example.lock.domain.request.OrderRequestVO;
+import com.cjs.example.lock.entity.TOrder;
+import com.cjs.example.lock.model.OrderModel;
 import com.cjs.example.lock.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author ChengJianSheng
@@ -37,6 +41,12 @@ public class OrderController {
     @GetMapping("/getCount/{product}")
     public int getCount(@PathVariable("product") Integer product) {
         return orderService.getCount(product);
+    }
+
+
+    @GetMapping("/getOrder")
+    public List<OrderModel> getOrder() {
+        return orderService.getOrder();
     }
 
 }

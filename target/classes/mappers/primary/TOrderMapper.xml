@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cjs.example.lock.mapper.TOrderMapper">
+<mapper namespace="com.cjs.example.lock.dao.primary.OrderMapper">
 
+
+
+    <select id="getOrder"  resultType="com.cjs.example.lock.model.OrderModel">
+        select *  from t_order where create_time > date_add(#{nowTime}, interval 1 day);
+    </select>
+
+    <select id="getOrder1"  resultType="com.cjs.example.lock.model.OrderModel">
+        select *  from t_order where create_time > date_add(#{nowTime}, interval 2 day);
+    </select>
 </mapper>

@@ -15,6 +15,8 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import java.util.*;
 
 /**
+ * 参考资料  https://www.cnblogs.com/smfx1314/p/10849321.html
+ *
  * @ProjectName: mybatis-plus
  * @Package: com.jiangfeixiang.mybatisplus.mpconfig
  * @ClassName: CodeGenerator

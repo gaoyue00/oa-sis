@@ -1,6 +1,10 @@
 package com.cjs.example.lock.service;
 
+import com.cjs.example.lock.entity.TOrder;
+import com.cjs.example.lock.model.OrderModel;
+
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.List;
 
 /**
  * @author ChengJianSheng
@@ -13,5 +17,9 @@ public interface OrderService {
     Boolean add( Integer productId,Integer productCount);
 
     Integer getCount(Integer productId);
+
+    List<OrderModel> getOrder();
+
+    String save1(Integer id);
 
 }

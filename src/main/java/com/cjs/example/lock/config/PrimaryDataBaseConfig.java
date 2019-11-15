@@ -43,7 +43,7 @@ public class PrimaryDataBaseConfig {
     /**
      * mapper文件的相对路径
      */
-    private static final String MAPPER_LOCATION = "classpath*:/mappers/primary/*.xml";
+    private static final String MAPPER_LOCATION = "classpath:mappers/primary/*.xml";
 
     private String filters;
     public  String url;
