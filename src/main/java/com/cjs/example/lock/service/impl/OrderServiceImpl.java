@@ -58,10 +58,13 @@ public class OrderServiceImpl implements OrderService {
         //  如果不加锁，必然超卖
         RLock lock = redissonClient.getLock("stock:" + productId);
         try {
-            Boolean isLock = lock.tryLock(1,180,TimeUnit.SECONDS);
+//            Boolean isLock = lock.tryLock(1,180,TimeUnit.SECONDS);
+
+            Boolean isLock = lock.isLocked();
             if(!isLock){
                 return "有其他人在操作";
             }
+            lock.lock(60,TimeUnit.SECONDS);
 //            lock.lock(10, TimeUnit.SECONDS);
             if (stockService.decrease(productId)) {
                 addOrder(userId+":"+Thread.currentThread().getName(),productId);
