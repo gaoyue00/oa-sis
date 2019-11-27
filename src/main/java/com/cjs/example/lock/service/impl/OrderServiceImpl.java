@@ -8,17 +8,22 @@ import com.cjs.example.lock.mapper.TOrderMapper;
 import com.cjs.example.lock.model.OrderModel;
 import com.cjs.example.lock.repository.OrderRepository;
 import com.cjs.example.lock.service.OrderService;
+import com.cjs.example.lock.service.RedisService;
 import com.cjs.example.lock.service.StockService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +47,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private TOrderMapper tOrderMapper;
+
+    @Resource
+    private RedisService redisService;
 
 
 
@@ -115,6 +123,15 @@ public class OrderServiceImpl implements OrderService {
         return "抢购成功";
     }
 
+    @Cacheable(value = "Test_OrderId" ,key = "#root.methodName+'['+#id+']'")
+    @Override
+    public String getRedisOrder( int id) {
+        System.out.println("进入缓存查询"+id);
+        Set setId = redisService.zrangeWithScores("Test_OrderId", 0, 10);
+        DefaultTypedTuple defaultTypedTuple = (DefaultTypedTuple) setId.toArray()[0];
+
+        return  defaultTypedTuple.getValue().toString();
+    }
 
     public String addOrder(String userId, Integer productId){
         String orderNo = UUID.randomUUID().toString().replace("-", "").toUpperCase();

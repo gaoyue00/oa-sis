@@ -3,6 +3,7 @@ package com.cjs.example.lock;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @SpringBootApplication
+@EnableCaching  //开启缓存
 @MapperScan("com.cjs.example.lock.mapper")
 public class RedissonExampleApplication {
 

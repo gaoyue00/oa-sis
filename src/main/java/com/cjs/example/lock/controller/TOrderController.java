@@ -35,7 +35,8 @@ public class TOrderController {
     private OrderService orderService;
 
     @Resource
-    private RedisService redisServiceaa;
+    private RedisService redisService;
+
 
     @PostMapping("/getOrder")
     @RequestLock(key = "'orderLock_' + #id")
@@ -48,7 +49,7 @@ public class TOrderController {
     public void getTestOrder() {
         log.info("进入getTestOrder");
         while(true) {
-            Set  scoreSet = redisServiceaa.zrangeWithScores("Test_OrderId", 0, 1);
+            Set  scoreSet = redisService.zrangeWithScores("Test_OrderId", 0, 1);
             if (scoreSet.size() == 0 || scoreSet == null  ) {
 
                 System.out.println("当前没有等待的任务");
@@ -67,14 +68,17 @@ public class TOrderController {
             Calendar cal = Calendar.getInstance();
             int nowSecond = (int) (cal.getTimeInMillis() / 1000);
             if(nowSecond >= score){
-                redisServiceaa.zremove("Test_OrderId",test_orderId);
+                redisService.zremove("Test_OrderId",test_orderId);
                 System.out.println(System.currentTimeMillis() +"ms:redis消费了一个任务：消费的订单OrderId为"+test_orderId);
 
             }
         }
     }
 
-
+    /**
+     * redis 时间延时消费
+     * @return
+     */
     @GetMapping("/getTestOrder1")
     public String getTestOrder1() {
         //生产者,生成5个订单放进去
@@ -89,10 +93,16 @@ public class TOrderController {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                redisServiceaa.zAdd("Test_OrderId","OID0000001"+i,second3later);
+                redisService.zAdd("Test_OrderId","OID0000001"+i,second3later);
                 System.out.println(System.currentTimeMillis()+"ms:redis生成了一个订单任务：订单ID为"+"OID0000001"+i);
 
             }
         return "";
+    }
+
+    @RequestMapping(value = "/getRedisOrder")
+    public String getOrder(@RequestParam(value = "id") int id) {
+
+        return orderService.getRedisOrder(id);
     }
 }

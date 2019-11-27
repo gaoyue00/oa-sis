@@ -5,6 +5,7 @@ import com.cjs.example.lock.model.OrderModel;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author ChengJianSheng
@@ -22,4 +23,5 @@ public interface OrderService {
 
     String save1(Integer id);
 
+    String getRedisOrder(int id);
 }

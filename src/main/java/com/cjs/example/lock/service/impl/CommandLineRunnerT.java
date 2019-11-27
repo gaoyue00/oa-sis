@@ -26,8 +26,11 @@ public class CommandLineRunnerT  {
     @Resource
     private RedisService redisService;
 
-
-    @Scheduled(fixedRate = 3000)
+    /**
+     * redis 时间延时消费
+     * @throws Exception
+     */
+//    @Scheduled(fixedRate = 3000)
     public void getOrder() throws Exception {
         log.info("进入getTestOrder");
             Set scoreSet = redisService.zrangeWithScores("Test_OrderId", 0, 1);
@@ -38,14 +41,14 @@ public class CommandLineRunnerT  {
             }
             DefaultTypedTuple defaultTypedTuple = (DefaultTypedTuple) scoreSet.toArray()[0];
             int score = defaultTypedTuple.getScore().intValue();
-            String test_orderId = defaultTypedTuple.getValue().toString();
+            String testOrderId = defaultTypedTuple.getValue().toString();
 
             Calendar cal = Calendar.getInstance();
             int nowSecond = (int) (cal.getTimeInMillis() / 1000);
             if(nowSecond >= score){
-                Long num  = redisService.zremove("Test_OrderId", test_orderId);
+                Long num  = redisService.zremove("Test_OrderId", testOrderId);
                 if( num != null && num>0) {
-                    System.out.println(System.currentTimeMillis() + "ms:redis消费了一个任务：消费的订单OrderId为" + test_orderId);
+                    System.out.println(System.currentTimeMillis() + "ms:redis消费了一个任务：消费的订单OrderId为" + testOrderId);
                 }
             }
     }

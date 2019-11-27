@@ -25,6 +25,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig extends CachingConfigurerSupport {
 
 
+    /**
+     * 选择redis作为默认缓存工具
+     * @param factory
+     * @return
+     */
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory  factory) {
+//        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
+        RedisCacheManager rcm = RedisCacheManager.builder(factory).build();
+        return rcm;
+    }
+
 
     /**
      * retemplate相关配置
