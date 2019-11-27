@@ -1,7 +1,10 @@
 package com.cjs.example.lock.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.*;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -13,6 +16,8 @@ import java.util.concurrent.TimeUnit;
  * Created by Administrator on 2018/10/6.
  */
 @Service
+@Component
+@Slf4j
 public class RedisService {
 
     @Autowired
@@ -239,6 +244,46 @@ public class RedisService {
         redisTemplate.opsForValue();
         return zset.rangeByScore(key, scoure, scoure1);
     }
+
+    /**
+     *有序集合取score
+     * @param key
+     * @param start
+     * @param end
+     * @return
+     */
+    public Set zrangeWithScores(String key, long start, long end) {
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        return zset.reverseRangeWithScores(key, start, end);
+    }
+
+    /**
+     * 有序集合取value
+     * @param key
+     * @param start
+     * @param end
+     * @return
+     */
+    public String zrangeWithValue(String key, long start, long end) {
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        redisTemplate.opsForValue();
+        Set<ZSetOperations.TypedTuple<Object>> typedTuples = zset.reverseRangeWithScores(key, start, end);
+        return ((RedisZSetCommands.Tuple) typedTuples.toArray()[0]).getValue().toString();
+    }
+
+    /**
+     * 移除元素(单个值、多个值)
+     * @param key
+     * @param values
+     * @return
+     */
+    public Long zremove(String key, Object... values) {
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        redisTemplate.opsForValue();
+        return zset.remove(key, values);
+    }
+
+
 
 
     //第一次加载的时候将数据加载到redis中
