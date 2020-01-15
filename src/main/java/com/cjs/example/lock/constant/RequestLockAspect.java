@@ -63,6 +63,7 @@ public class RequestLockAspect {
         }catch (Exception e){
             throw e;
         }finally {
+            log.info("释放锁------");
             //释放锁
             lock.unlock();
         }

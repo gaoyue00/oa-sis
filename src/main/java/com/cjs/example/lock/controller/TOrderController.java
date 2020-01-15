@@ -41,7 +41,9 @@ public class TOrderController {
     @PostMapping("/getOrder")
     @RequestLock(key = "'orderLock_' + #id")
     public String getOrder(@RequestParam("id") Integer id) {
-        return orderService.save1(id);
+        String s = orderService.save1(id);
+        System.out.println("返回结果"+id);
+        return s;
     }
 
 

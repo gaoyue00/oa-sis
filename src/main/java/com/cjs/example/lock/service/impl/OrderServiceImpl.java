@@ -117,6 +117,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String save1(Integer id) {
+        System.out.println("进入service---");
             if(this.save(id) == 0){
                 return "抢购无效";
             }
