@@ -12,6 +12,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -27,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 @ConditionalOnClass(RedissonClient.class)
+@Scope("prototype")
 public class RequestLockAspect {
 
     private ExpressionParser parser = new SpelExpressionParser();
@@ -63,7 +65,7 @@ public class RequestLockAspect {
         }catch (Exception e){
             throw e;
         }finally {
-            log.info("释放锁------");
+            System.out.println("释放锁------");
             //释放锁
             lock.unlock();
         }
